@@ -1,4 +1,4 @@
-package top.tolan.common.config;
+package top.tolan.common.config.serialization;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONReader;
@@ -12,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Redis使用FastJson序列化
- *
- * @author ruoyi
  */
 public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
 

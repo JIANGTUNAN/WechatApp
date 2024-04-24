@@ -5,8 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 字符串格式化
- *
- * @author ruoyi
  */
 public class StrFormatter {
 

@@ -37,6 +37,8 @@
         <commons-io.version>2.13.0</commons-io.version>
         <jjwt.version>0.9.1</jjwt.version>
         <jaxb.version>2.3.0</jaxb.version>
+        <snappy.version>1.1.10.5</snappy.version>
+        <kryo.version>5.0.0</kryo.version>
     </properties>
 
     <dependencyManagement>
@@ -143,6 +145,18 @@
                 <groupId>top.tolan.wechat</groupId>
                 <artifactId>app-auth</artifactId>
                 <version>${app.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.xerial.snappy</groupId>
+                <artifactId>snappy-java</artifactId>
+                <version>${snappy.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo</artifactId>
+                <version>${kryo.version}</version>
             </dependency>
 
         </dependencies>

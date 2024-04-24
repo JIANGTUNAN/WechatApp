@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import top.tolan.common.entity.po.SysUser;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class LoginUser implements UserDetails {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
     // 系统用户信息
     private SysUser sysUser;
     // 用户身份令牌
