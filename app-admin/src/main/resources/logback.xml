@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 日志存放路径 -->
-	<property name="log.path" value="D:/workProj/WechatApp/logs" />
+	<property name="log.path" value="./logs"/>
     <!-- 日志输出格式 -->
     <property name="log.pattern" value="%green(%d{HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %blue([%-50.50class]) %msg%n"/>
 

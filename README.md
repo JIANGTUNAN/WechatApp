@@ -30,7 +30,7 @@
 ### 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/yourproject.git
+git clone https://github.com/JIANGTUNAN/WechatApp.git
 ```
 
 ### 配置数据库
@@ -54,6 +54,15 @@ spring:
   redis:
     host: localhost
     port: 6379
+```
+
+### 配置文件上传路径
+
+在 `application.properties` 或 `application.yml` 中配置用户文件上传地址。
+
+```yaml
+app:
+  profile: your-path/upload
 ```
 
 ### 运行项目
