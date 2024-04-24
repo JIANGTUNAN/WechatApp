@@ -1,0 +1,54 @@
+server:
+  port: 8080
+  tomcat:
+    # 当文件超过tomcat的大小限制后会先于Controller触发异常，此时我们的异常处理器无法捕获异常
+    max-swallow-size: 100MB # 内嵌tomcat的最大吞吐量，设置 -1 不限制
+spring:
+  application:
+    name: wechat-app
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wechat_app?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 200MB
+
+# MyBatis配置
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: top.tolan.**.entity.po
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+Wechat:
+  AppID: "wx376e58abd9d81e28"
+  AppSecret: "208cc4d98e5ed1af7aea1155fef9c6b2"
+
+app:
+  # 文件上传路径
+  profile: D:/workProj/WechatApp/upload
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 30

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.tolan.system.mapper.SysUserMapper">
+    <resultMap id="BaseResultMap" type="top.tolan.common.entity.po.SysUser">
+        <!--@mbg.generated generated on Mon Apr 15 17:54:24 CST 2024.-->
+        <!--@Table sys_user-->
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="open_id" jdbcType="VARCHAR" property="openId"/>
+        <result column="sys_head_pic" jdbcType="VARCHAR" property="sysHeadPic"/>
+        <result column="wx_head_pic" jdbcType="VARCHAR" property="wxHeadPic"/>
+        <result column="phone" jdbcType="CHAR" property="phone"/>
+        <result column="role_id" jdbcType="CHAR" property="roleId"/>
+        <result column="sex" jdbcType="CHAR" property="sex"/>
+        <result column="sys_nick_name" jdbcType="VARCHAR" property="sysNickName"/>
+        <result column="wx_nick_name" jdbcType="VARCHAR" property="wxNickName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,
+        open_id,
+        sys_head_pic,
+        wx_head_pic,
+        phone,
+        role_id,
+        sex,
+        sys_nick_name,
+        wx_nick_name
+    </sql>
+</mapper>
