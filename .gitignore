@@ -20,7 +20,6 @@ target/
 .springBeans
 
 ### IntelliJ IDEA ###
-!.idea/icon.svg
 .idea
 *.iws
 *.iml
