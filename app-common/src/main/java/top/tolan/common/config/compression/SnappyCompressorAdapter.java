@@ -31,6 +31,7 @@ public class SnappyCompressorAdapter<T> implements RedisSerializer<T> {
     @Override
     public T deserialize(byte[] bytes) {
         try {
+            if (bytes == null) return null; // 如果字节数组为空，返回null
             byte[] uncompressedData = Snappy.uncompress(bytes); // 使用Snappy解压缩字节数组
             return innerSerializer.deserialize(uncompressedData); // 使用内部序列化器反序列化数据
         } catch (Exception e) {

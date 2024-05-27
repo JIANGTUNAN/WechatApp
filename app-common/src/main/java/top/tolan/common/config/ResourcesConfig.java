@@ -16,16 +16,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer {
 
-    /**
-     * 默认上传的地址
-     */
+    // 文件上传路径
     @Value("${app.profile}")
     private String DEFAULT_BASE_DIR;
+    // 映射路径
+    @Value("${app.mappingUrl}")
+    private String MAPPING_URL;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 通过url访问项目外的目录图片
-        registry.addResourceHandler("/profile/**").addResourceLocations("file:" + DEFAULT_BASE_DIR + "/");
+        registry.addResourceHandler(MAPPING_URL + "/**").addResourceLocations("file:" + DEFAULT_BASE_DIR + "/");
     }
 
     @Bean

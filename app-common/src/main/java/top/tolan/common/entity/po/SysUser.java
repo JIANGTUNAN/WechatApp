@@ -1,20 +1,20 @@
 package top.tolan.common.entity.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serial;
-import java.io.Serializable;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "sys_user")
+@TableName(value = "sys_user")
 public class SysUser implements Serializable {
 
     @Serial
@@ -23,62 +23,83 @@ public class SysUser implements Serializable {
     /**
      * 主键
      */
-    @Id
-    @Column(name = "user_id")
-    @GeneratedValue(generator = "JDBC")
+    @TableId(value = "user_id", type = IdType.AUTO)
     private Integer userId;
 
     /**
      * 用户微信openId
      */
-    @Column(name = "open_id")
+    @TableField(value = "open_id")
     private String openId;
 
     /**
      * 用户系统头像
      */
-    @Column(name = "sys_head_pic")
+    @TableField(value = "sys_head_pic")
     private String sysHeadPic;
 
     /**
      * 用户微信头像
      */
-    @Column(name = "wx_head_pic")
+    @TableField(value = "wx_head_pic")
     private String wxHeadPic;
 
     /**
      * 用户手机号码
      */
-    @Column(name = "phone")
+    @TableField(value = "phone")
     private String phone;
 
     /**
-     * 用户角色 1：普通用户；2：管理员
+     * 用户角色  1：普通用户；2：管理员
      */
-    @Column(name = "role_id")
+    @TableField(value = "role_id")
     private String roleId;
 
     /**
-     * 用户性别 1：男；2：女；3：未知
+     * 用户性别  1：男；2：女；3：未知
      */
-    @Column(name = "sex")
+    @TableField(value = "sex")
     private String sex;
 
     /**
      * 用户系统昵称
      */
-    @Column(name = "sys_nick_name")
+    @TableField(value = "sys_nick_name")
     private String sysNickName;
 
     /**
      * 用户微信昵称
      */
-    @Column(name = "wx_nick_name")
+    @TableField(value = "wx_nick_name")
     private String wxNickName;
 
-    public SysUser(String wxHeadPic, String wxNickName) {
-        this.wxHeadPic = wxHeadPic;
-        this.wxNickName = wxNickName;
-    }
+    /**
+     * 个人简介
+     */
+    @TableField(value = "introduction")
+    private String introduction;
 
+    /**
+     * 生日
+     */
+    @TableField(value = "birthday")
+    private String birthday;
+
+    /**
+     * 学校
+     */
+    @TableField(value = "school")
+    private String school;
+
+    /**
+     * 城市
+     */
+    @TableField(value = "city")
+    private String city;
+
+    public SysUser(String sysHeadPic, String sysNickName) {
+        this.sysHeadPic = sysHeadPic;
+        this.sysNickName = sysNickName;
+    }
 }

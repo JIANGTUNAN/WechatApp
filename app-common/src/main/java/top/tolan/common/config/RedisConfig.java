@@ -49,11 +49,11 @@ public class RedisConfig {
         // 设置键的序列化器为StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         // 设置值的序列化器为FastJson2JsonRedisSerializer
-        template.setValueSerializer(this.snappyCompressorAdapter());
+        template.setValueSerializer(this.fastJson2JsonRedisSerializer());
         // 设置哈希键的序列化器为StringRedisSerializer
         template.setHashKeySerializer(new StringRedisSerializer());
         // 设置哈希值的序列化器为FastJson2JsonRedisSerializer
-        template.setHashValueSerializer(this.snappyCompressorAdapter());
+        template.setHashValueSerializer(this.fastJson2JsonRedisSerializer());
         template.afterPropertiesSet(); // 初始化模板
         return template;
     }

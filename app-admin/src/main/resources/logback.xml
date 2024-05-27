@@ -4,10 +4,13 @@
 	<property name="log.path" value="./logs"/>
     <!-- 日志输出格式 -->
     <property name="log.pattern" value="%green(%d{HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %blue([%-50.50class]) %msg%n"/>
+    <!-- 文件输出格式 -->
+    <property name="log.file" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%-50.50class] %msg%n"/>
 
     <!-- 控制台输出 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
+            <charset>UTF-8</charset>
             <pattern>${log.pattern}</pattern>
         </encoder>
     </appender>
@@ -22,9 +25,10 @@
 			<!-- 日志最大的历史 60天 -->
 			<maxHistory>60</maxHistory>
 		</rollingPolicy>
-		<encoder>
-			<pattern>${log.pattern}</pattern>
-		</encoder>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${log.file}</pattern>
+        </encoder>
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
             <level>INFO</level>
@@ -45,7 +49,8 @@
 			<maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+            <pattern>${log.file}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
@@ -57,9 +62,9 @@
         </filter>
     </appender>
 
-	<!-- 用户访问日志输出  -->
-    <appender name="sys-user" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log.path}/sys-user.log</file>
+    <!-- 自定义日志记录  -->
+    <appender name="custom-record" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/sys-custom.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 按天回滚 daily -->
             <fileNamePattern>${log.path}/sys-user.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -67,7 +72,8 @@
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+            <pattern>${log.file}</pattern>
         </encoder>
     </appender>
 
@@ -86,8 +92,9 @@
         <appender-ref ref="file_error" />
     </root>
 
-	<!--系统用户操作日志-->
-    <logger name="sys-user" level="info">
-        <appender-ref ref="sys-user"/>
+    <!--自定义日志记录-->
+    <logger name="custom-record" level="info">
+        <appender-ref ref="custom-record"/>
     </logger>
+
 </configuration>

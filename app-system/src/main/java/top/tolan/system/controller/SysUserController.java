@@ -25,7 +25,7 @@ public class SysUserController {
      */
     @GetMapping("/findByUserId/{userId}")
     public AjaxResult findByUserId(@PathVariable("userId") Integer userId) {
-        SysUser user = userService.findUserByUserId(userId);
+        SysUser user = userService.getById(userId);
         return AjaxResult.success(user);
     }
 

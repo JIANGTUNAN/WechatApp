@@ -1,7 +1,9 @@
 package top.tolan.system.mapper;
 
-import tk.mybatis.mapper.common.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.tolan.common.entity.po.SysUser;
 
-public interface SysUserMapper extends Mapper<SysUser> {
+public interface SysUserMapper extends BaseMapper<SysUser> {
+
+
 }
