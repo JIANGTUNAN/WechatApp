@@ -43,7 +43,7 @@ public class WechatAuthorizationToken extends AbstractAuthenticationToken {
      */
     @Override
     public Object getCredentials() {
-        return this.loginUser.getToken();
+        return this.loginUser.getUserId();
     }
 
     /**

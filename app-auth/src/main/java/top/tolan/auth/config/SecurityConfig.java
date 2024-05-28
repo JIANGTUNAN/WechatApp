@@ -5,12 +5,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -18,7 +24,6 @@ import org.springframework.web.filter.CorsFilter;
 import top.tolan.auth.filter.JwtAuthenticationTokenFilter;
 import top.tolan.auth.filter.WechatLoginFilter;
 import top.tolan.auth.handler.AuthenticationEntryPointHandler;
-import top.tolan.auth.handler.LogoutSuccessHandlerImpl;
 
 
 @EnableWebSecurity
@@ -35,10 +40,6 @@ public class SecurityConfig {
     @Resource
     private AuthenticationEntryPointHandler unauthorizedHandler;
 
-    // 自定义退出处理类
-    @Resource
-    private LogoutSuccessHandlerImpl logoutSuccessHandler;
-
     // token认证过滤器
     @Resource
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
@@ -46,6 +47,10 @@ public class SecurityConfig {
     // 跨域过滤器
     @Resource
     private CorsFilter corsFilter;
+
+    // 自定义用户认证逻辑
+    @Resource
+    private UserDetailsService userDetailsService;
 
     /**
      * anyRequest          |   匹配所有请求路径
@@ -65,24 +70,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // CSRF禁用，因为不使用session
-            .csrf(AbstractHttpConfigurer::disable)
-            // 禁用HTTP响应标头
-            .headers(headers -> headers.xssProtection(HeadersConfigurer.XXssConfig::disable)
-                .cacheControl(HeadersConfigurer.CacheControlConfig::disable)
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-            // 认证失败处理类
-            .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(unauthorizedHandler))
-            // 基于token，所以不需要session
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-            .logout(logout -> logout.logoutUrl("/app/logout").logoutSuccessHandler(logoutSuccessHandler))
-            .authorizeHttpRequests(auth ->
-                    auth
-                        // .requestMatchers( "/**").permitAll()
-                        .requestMatchers("/login", "/register", "/captchaImage", "/app/login", "/wechat/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/", "/*.html", "/**.html", "/**.css", "/**.js", "/profile/**").permitAll()
-                        .anyRequest().authenticated()
-            );
+                // CSRF禁用，因为不使用session
+                .csrf(AbstractHttpConfigurer::disable)
+                // 禁用HTTP响应标头
+                .headers(headers -> headers.xssProtection(HeadersConfigurer.XXssConfig::disable)
+                        .cacheControl(HeadersConfigurer.CacheControlConfig::disable)
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                // 认证失败处理类
+                .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(unauthorizedHandler))
+                // 基于token，所以不需要session
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/auth/logout")
+                                .deleteCookies("Admin-Token", "JSESSIONID").permitAll()
+                )
+                .authorizeHttpRequests(auth ->
+                        auth
+                                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/", "/*.html", "/**.html", "/**.css", "/**.js", "/profile/**").permitAll()
+                                .anyRequest().authenticated()
+                );
 
         // 添加自定义JWT过滤器
         http.addFilterBefore(wechatLoginFilter, UsernamePasswordAuthenticationFilter.class);
@@ -93,6 +101,25 @@ public class SecurityConfig {
         http.addFilterBefore(corsFilter, LogoutFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * 强散列哈希加密实现
+     */
+    @Bean
+    public PasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * 解决 无法直接注入 AuthenticationManager
+     */
+    @Bean
+    public AuthenticationManager authenticationManagerBean() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+        return new ProviderManager(daoAuthenticationProvider);
     }
 
 }

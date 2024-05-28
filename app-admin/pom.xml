@@ -45,10 +45,10 @@
             <artifactId>app-sms</artifactId>
         </dependency>
         <!-- 微信登录和安全框架 -->
-<!--        <dependency>-->
-<!--            <groupId>top.tolan.wechat</groupId>-->
-<!--            <artifactId>app-auth</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>top.tolan.wechat</groupId>
+            <artifactId>app-auth</artifactId>
+        </dependency>
 
     </dependencies>
 

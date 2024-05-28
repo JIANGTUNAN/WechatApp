@@ -23,12 +23,25 @@ public class LoginUser implements UserDetails {
 
     // 系统用户信息
     private SysUser sysUser;
-    // 用户身份令牌
-    private String token;
+    // 在缓存中存储用户身份令牌的key
+    private String uuid;
+    // 用户主键
+    private Integer userId;
+    // 用户账户
+    private String userName;
+    // 用户系统头像
+    private String sysHeadPic;
+    // 用户系统昵称
+    private String sysNickName;
+    // 用户角色  1：普通用户；2：管理员
+    private String roleId;
     // 登录时间
     private Long loginTime;
+    // 登录方式
+    private String loginMethod;
     // 过期时间
     private Long expireTime;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -38,13 +51,13 @@ public class LoginUser implements UserDetails {
     @JSONField(serialize = false)
     @Override
     public String getPassword() {
-        return null;
+        return sysUser.getPassword();
     }
 
     @JSONField(serialize = false)
     @Override
     public String getUsername() {
-        return sysUser.getSysNickName();
+        return sysUser.getUserName();
     }
 
     @JSONField(serialize = false)

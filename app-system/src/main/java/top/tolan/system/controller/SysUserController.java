@@ -8,7 +8,6 @@ import top.tolan.common.entity.po.SysUser;
 import top.tolan.system.entity.dto.EditUserDto;
 import top.tolan.system.service.ISysUserService;
 
-
 @RestController
 @RequestMapping("/sys/user")
 public class SysUserController {

@@ -10,9 +10,12 @@ import top.tolan.auth.entity.LoginUser;
 import top.tolan.auth.service.ITokenService;
 import top.tolan.auth.token.WechatAuthorizationToken;
 
+/**
+ * 微信小程序登录验证提供者
+ */
 @Component
 @RequiredArgsConstructor
-public class WechatCodeAuthenticationProvider implements AuthenticationProvider {
+public class WechatCodeAuthProv implements AuthenticationProvider {
 
     private final ITokenService wechatUserService;
 

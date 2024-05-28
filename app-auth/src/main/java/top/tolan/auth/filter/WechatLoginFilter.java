@@ -9,7 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.stereotype.Component;
 import top.tolan.auth.handler.LoginSuccessHandler;
-import top.tolan.auth.provider.WechatCodeAuthenticationProvider;
+import top.tolan.auth.provider.WechatCodeAuthProv;
 import top.tolan.auth.token.WechatAuthorizationToken;
 
 /**
@@ -24,7 +24,7 @@ public class WechatLoginFilter extends AbstractAuthenticationProcessingFilter {
      * @param wechatCodeAuthProvider 微信登录认证提供者
      * @param loginSuccessHandler    登录成功处理器
      */
-    public WechatLoginFilter(WechatCodeAuthenticationProvider wechatCodeAuthProvider, LoginSuccessHandler loginSuccessHandler) {
+    public WechatLoginFilter(WechatCodeAuthProv wechatCodeAuthProvider, LoginSuccessHandler loginSuccessHandler) {
         super("/app/login");
         this.setAuthenticationManager(new ProviderManager(wechatCodeAuthProvider));
         this.setAuthenticationSuccessHandler(loginSuccessHandler);

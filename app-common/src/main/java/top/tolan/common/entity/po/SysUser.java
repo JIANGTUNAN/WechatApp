@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serial;
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
@@ -98,6 +98,24 @@ public class SysUser implements Serializable {
     @TableField(value = "city")
     private String city;
 
+    /**
+     * 账户
+     */
+    @TableField(value = "user_name")
+    private String userName;
+
+    /**
+     * 密码
+     */
+    @TableField(value = "password")
+    private String password;
+
+    /**
+     * 构造函数
+     *
+     * @param sysHeadPic  用户系统头像
+     * @param sysNickName 用户系统昵称
+     */
     public SysUser(String sysHeadPic, String sysNickName) {
         this.sysHeadPic = sysHeadPic;
         this.sysNickName = sysNickName;

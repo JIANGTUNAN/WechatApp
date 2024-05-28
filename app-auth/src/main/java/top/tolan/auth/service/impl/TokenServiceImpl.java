@@ -99,7 +99,7 @@ public class TokenServiceImpl implements ITokenService {
     @Override
     public String createToken(LoginUser loginUser) {
         String token = UUID.randomUUID().toString();
-        loginUser.setToken(token);
+        loginUser.setUuid(token);
         this.refreshToken(loginUser);
         Map<String, Object> claims = new HashMap<>();
         claims.put("login_user_key", token);
@@ -113,7 +113,7 @@ public class TokenServiceImpl implements ITokenService {
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
-        String userKey = getTokenKey(loginUser.getToken());
+        String userKey = getTokenKey(loginUser.getUuid());
         // 保存用户信息到Redis
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
