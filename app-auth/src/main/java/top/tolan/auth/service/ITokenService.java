@@ -5,9 +5,6 @@ import top.tolan.auth.entity.LoginUser;
 
 public interface ITokenService {
 
-    // 小程序授权登录验证
-    public LoginUser appLogin(String code, LoginUser sysUser);
-
     // 创建token
     public String createToken(LoginUser loginUser);
 

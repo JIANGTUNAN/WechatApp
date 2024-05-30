@@ -1,29 +1,19 @@
 package top.tolan.auth.service.impl;
 
-import com.alibaba.fastjson2.JSON;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-import top.tolan.auth.entity.LoginDTO;
 import top.tolan.auth.entity.LoginUser;
 import top.tolan.auth.service.ITokenService;
-import top.tolan.common.entity.po.SysUser;
-import top.tolan.common.exception.ServiceException;
 import top.tolan.common.utils.RedisCache;
-import top.tolan.system.service.ISysUserService;
 
-
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -37,61 +27,24 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 public class TokenServiceImpl implements ITokenService {
 
-    // 小程序的AppID
-    @Value("${Wechat.AppID}")
-    private String APP_ID;
-    // 小程序密钥
-    @Value("${Wechat.AppSecret}")
-    private String APP_SECRET;
-    // 令牌自定义标识
-    @Value("${token.header}")
-    private String header;
+
+    @Resource
+    private RedisCache redisCache;
     // 令牌秘钥
     @Value("${token.secret}")
     private String secret;
     // 令牌有效期（默认30分钟）
     @Value("${token.expireTime}")
     private int expireTime;
+    // 令牌自定义标识
+    @Value("${token.header}")
+    private String header;
+
+
     protected static final long MILLIS_SECOND = 1000;
     protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
     private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
-    @Resource
-    private ISysUserService userService;
-    @Resource
-    private RestTemplate restTemplate;
-    @Resource
-    private RedisCache redisCache;
-
-    /**
-     * 微信用户授权小程序登录验证
-     */
-    @Override
-    public LoginUser appLogin(String code, LoginUser loginUser) {
-        // 构建请求地址
-        URI uri = UriComponentsBuilder.fromUriString("https://api.weixin.qq.com/sns/jscode2session")
-                .queryParam("appid", APP_ID).queryParam("secret", APP_SECRET).queryParam("js_code", code)
-                .queryParam("grant_type", "authorization_code").build().toUri();
-        try {
-            String response = restTemplate.getForObject(uri, String.class);
-            LoginDTO loginDTO = JSON.parseObject(response, LoginDTO.class);
-            assert ObjectUtils.isNotEmpty(loginDTO);
-            if (loginDTO.getErrcode() == null) {
-                String openid = loginDTO.getOpenid();
-                SysUser sysUser = loginUser.getSysUser();
-                sysUser.setOpenId(openid);
-                sysUser = userService.addUserOnNotPresence(sysUser);
-                loginUser.setSysUser(sysUser);
-                return loginUser;
-            } else {
-                log.error("微信登录失败, 错误码: {}, 错误消息: {}", loginDTO.getErrcode(), loginDTO.getErrmsg());
-                throw new ServiceException("微信登录失败: " + loginDTO.getErrmsg());
-            }
-        } catch (Exception e) {
-            log.error("登录失败：{}", e.getMessage(), e);
-            throw new ServiceException("登录异常，请稍后再试");
-        }
-    }
 
     /**
      * 创建令牌
@@ -110,8 +63,8 @@ public class TokenServiceImpl implements ITokenService {
      * 刷新令牌有效期
      */
     public void refreshToken(LoginUser loginUser) {
-        loginUser.setLoginTime(System.currentTimeMillis());
-        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
+        // 重新设置过期时间
+        loginUser.setExpireTime(System.currentTimeMillis() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getUuid());
         // 保存用户信息到Redis

@@ -1,0 +1,26 @@
+# sensitive.properties
+db.username=
+db.password=
+redis.username=
+redis.password=
+
+# 小程序的AppID
+wechat.app-id=
+# 小程序密钥
+wechat.app-secret=
+
+# 短信服务-访问key
+sms.access-key-id=
+# 短信服务-访问钥匙
+sms.access-key-secret=
+# 短信服务-端点
+sms.endpoint=
+# 短信服务-签名
+sms.signName=
+
+# 人脸识别服务-访问key
+face.access-key-id=
+# 人脸识别服务-访问钥匙
+face.access-key-secret=
+# 人脸识别服务-端点
+face.endpoint=

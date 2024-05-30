@@ -2,11 +2,10 @@ package top.tolan.auth.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.tolan.auth.constant.LoginMethods;
-import top.tolan.auth.dto.LoginDTO;
+import top.tolan.auth.dto.LoginParentDTO;
 import top.tolan.auth.entity.LoginUser;
 import top.tolan.auth.service.IAuthServer;
 import top.tolan.auth.service.ITokenService;
@@ -18,7 +17,6 @@ import top.tolan.common.domain.AjaxResult;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -53,9 +51,9 @@ public class AuthController {
      * 登录
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody @Validated LoginDTO loginDTO) {
-        IAuthServer service = loginServiceMap.get(loginDTO.getLoginMethod());
-        return service.login(loginDTO);
+    public AjaxResult login(@RequestBody @Validated LoginParentDTO loginParentDTO) {
+        IAuthServer service = loginServiceMap.get(loginParentDTO.getLoginMethod());
+        return service.login(loginParentDTO);
     }
 
     /**

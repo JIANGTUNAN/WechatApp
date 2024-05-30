@@ -1,10 +1,10 @@
 sms:
-  access-key-id:
-  access-key-secret:
+  access-key-id: ${sms.access-key-id}
+  access-key-secret: ${sms.access-key-secret}
   # Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
-  endpoint:
-#  signName: 图南
-  signName:
+  endpoint: ${sms.endpoint}
+  # signName: 图南
+  signName: ${sms.signName}
   # 一天最大发送次数
   dayMaxTimes: 20
   # 发送频率限制(分钟)
@@ -13,6 +13,6 @@ sms:
   codeValidTime: 5
 
 face:
-  access-key-id:
-  access-key-secret:
-  endpoint:
+  access-key-id: ${face.access-key-id}
+  access-key-secret: ${face.access-key-secret}
+  endpoint: ${face.endpoint}

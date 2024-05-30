@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public AjaxResult handleNoResourceFoundException(NoResourceFoundException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}', 无法访问系统资源", requestURI);
+        log.error("请求地址'{}', 无法访问系统资源", requestURI, e);
         return AjaxResult.error("无法访问系统资源：" + e.getMessage());
     }
 

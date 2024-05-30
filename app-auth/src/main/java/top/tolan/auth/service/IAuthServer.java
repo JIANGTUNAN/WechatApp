@@ -1,11 +1,7 @@
 package top.tolan.auth.service;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import top.tolan.auth.dto.LoginDTO;
+import top.tolan.auth.dto.LoginParentDTO;
 import top.tolan.auth.entity.LoginUser;
 import top.tolan.common.domain.AjaxResult;
 import top.tolan.common.utils.SpringUtils;
@@ -15,11 +11,10 @@ import top.tolan.common.utils.SpringUtils;
  */
 public interface IAuthServer {
 
-
     /**
      * 登录
      */
-    public AjaxResult login(LoginDTO loginDTO);
+    public <T extends LoginParentDTO> AjaxResult login(T loginParentDTO);
 
     /**
      * 登出

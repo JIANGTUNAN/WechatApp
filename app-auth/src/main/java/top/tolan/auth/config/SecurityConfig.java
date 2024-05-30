@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,8 +23,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.filter.CorsFilter;
 import top.tolan.auth.filter.JwtAuthenticationTokenFilter;
-import top.tolan.auth.filter.WechatLoginFilter;
 import top.tolan.auth.handler.AuthenticationEntryPointHandler;
+import top.tolan.auth.provider.WechatCodeAuthProv;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @EnableWebSecurity
@@ -31,10 +35,6 @@ import top.tolan.auth.handler.AuthenticationEntryPointHandler;
 @Configuration
 @EnableAsync
 public class SecurityConfig {
-
-    // 微信登录过滤器
-    @Resource
-    private WechatLoginFilter wechatLoginFilter;
 
     // 认证失败处理类
     @Resource
@@ -80,20 +80,13 @@ public class SecurityConfig {
                 .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(unauthorizedHandler))
                 // 基于token，所以不需要session
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .logout(logout ->
-                        logout
-                                .logoutUrl("/auth/logout")
-                                .deleteCookies("Admin-Token", "JSESSIONID").permitAll()
-                )
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/", "/*.html", "/**.html", "/**.css", "/**.js", "/profile/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
-        // 添加自定义JWT过滤器
-        http.addFilterBefore(wechatLoginFilter, UsernamePasswordAuthenticationFilter.class);
         // token过滤器 验证token有效性
         http.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         // 添加CORS过滤器
@@ -112,14 +105,31 @@ public class SecurityConfig {
     }
 
     /**
+     * 账号密码认证器
+     */
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public WechatCodeAuthProv wechatCodeAuthProv() {
+        return new WechatCodeAuthProv();
+    }
+
+
+    /**
      * 解决 无法直接注入 AuthenticationManager
      */
     @Bean
     public AuthenticationManager authenticationManagerBean() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
-        return new ProviderManager(daoAuthenticationProvider);
+        List<AuthenticationProvider> authenticationProviders = new ArrayList<>();
+        authenticationProviders.add(daoAuthenticationProvider());
+        authenticationProviders.add(wechatCodeAuthProv());
+        return new ProviderManager(authenticationProviders);
     }
 
 }

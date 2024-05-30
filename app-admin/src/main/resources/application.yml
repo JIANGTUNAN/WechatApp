@@ -10,8 +10,8 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wechat_app?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
-    username: root
-    password: root
+    username: ${db.username}
+    password: ${db.password}
   data:
     redis:
       host: localhost
@@ -20,6 +20,8 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 200MB
+  config:
+    import: "classpath:sensitive.properties"
 
 app:
   # 映射路径
@@ -28,8 +30,8 @@ app:
   profile: D:/workProj/WechatApp/upload
 
 Wechat:
-  AppID: "wx376e58abd9d81e28"
-  AppSecret: "208cc4d98e5ed1af7aea1155fef9c6b2"
+  AppID: ${wechat.app-id}
+  AppSecret: ${wechat.app-secret}
 
 # token配置
 token:
@@ -57,5 +59,3 @@ mybatis-plus:
   global-config:
     # 是否关闭 MyBatis-Plus 的启动 Banner
     banner: false
-
-

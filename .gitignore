@@ -49,3 +49,4 @@ nbdist/
 
 upload/
 logs/
+sensitive.properties
