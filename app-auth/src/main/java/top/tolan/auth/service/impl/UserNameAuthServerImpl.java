@@ -23,12 +23,19 @@ import top.tolan.common.constant.HttpStatus;
  * @version 2024年5月30日
  */
 @Service
-public class UserNameAuthServerImpl implements IAuthServer {
+public class UserNameAuthServerImpl extends BaseAuthServer implements IAuthServer {
 
-    @Resource
-    private AuthenticationManager authenticationManager;
-    @Resource
-    private ITokenService tokenService;
+    private final AuthenticationManager authenticationManager;
+    private final ITokenService tokenService;
+
+    public UserNameAuthServerImpl(
+            ITokenService tokenService,
+            AuthenticationManager authenticationManager
+    ) {
+        super(tokenService);
+        this.tokenService = tokenService;
+        this.authenticationManager = authenticationManager;
+    }
 
 
     /**

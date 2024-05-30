@@ -22,11 +22,6 @@ public interface IAuthServer {
     /**
      * 登出
      */
-    public default AjaxResult logout(@NonNull LoginUser loginUser) {
-        ITokenService tokenService = SpringUtils.getBean(ITokenService.class);
-        // 删除用户缓存记录
-        tokenService.delLoginUser(loginUser.getUuid());
-        return AjaxResult.success("退出成功");
-    }
+    public AjaxResult logout(@NonNull LoginUser loginUser);
 
 }

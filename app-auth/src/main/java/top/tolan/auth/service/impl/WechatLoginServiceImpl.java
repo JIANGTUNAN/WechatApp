@@ -1,6 +1,7 @@
 package top.tolan.auth.service.impl;
 
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,12 +27,20 @@ import top.tolan.common.domain.AjaxResult;
  * @version 2024年5月30日
  */
 @Service
-public class WechatLoginServiceImpl implements IAuthServer {
+public class WechatLoginServiceImpl extends BaseAuthServer implements IAuthServer {
 
-    @Resource
-    private AuthenticationManager authenticationManager;
-    @Resource
-    private ITokenService tokenService;
+    private final AuthenticationManager authenticationManager;
+    private final ITokenService tokenService;
+
+    public WechatLoginServiceImpl(
+            ITokenService tokenService,
+            AuthenticationManager authenticationManager
+    ) {
+        super(tokenService);
+        this.tokenService = tokenService;
+        this.authenticationManager = authenticationManager;
+    }
+
 
     /**
      * 用户名密码登录验证
