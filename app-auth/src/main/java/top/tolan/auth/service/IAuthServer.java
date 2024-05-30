@@ -7,7 +7,10 @@ import top.tolan.common.domain.AjaxResult;
 import top.tolan.common.utils.SpringUtils;
 
 /**
- * 用户登录授权服务
+ * 用户登录授权接口
+ *
+ * @author tooooolan
+ * @version 2024年5月30日
  */
 public interface IAuthServer {
 

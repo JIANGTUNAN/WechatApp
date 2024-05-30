@@ -9,8 +9,11 @@ import lombok.NoArgsConstructor;
 import top.tolan.auth.constant.LoginMethods;
 
 /**
- * 登录表单
- * 使用@JsonTypeInfo实现请求数据对象多态
+ * 登录表单参数接收
+ * 使用{@link JsonTypeInfo}实现请求数据对象多态
+ *
+ * @author tooooolan
+ * @version 2024年5月30日
  */
 @Data
 @AllArgsConstructor

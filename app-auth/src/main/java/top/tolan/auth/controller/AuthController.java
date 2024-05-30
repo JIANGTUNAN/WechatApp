@@ -19,6 +19,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 验证控制器
+ *
+ * @author tooooolan
+ * @version 2024年5月30日
+ */
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
