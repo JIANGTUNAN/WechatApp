@@ -1,11 +1,13 @@
 package top.tolan.auth.service.impl;
 
 import jakarta.annotation.Resource;
+import lombok.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import top.tolan.auth.constant.LoginMethods;
 import top.tolan.auth.context.AuthenticationContextHolder;
 import top.tolan.auth.dto.LoginParentDTO;
 import top.tolan.auth.dto.UsernamePasswordLoginDTO;
@@ -15,6 +17,7 @@ import top.tolan.auth.provider.UsernamePasswordAuthProv;
 import top.tolan.auth.provider.WechatCodeAuthProv;
 import top.tolan.auth.service.IAuthServer;
 import top.tolan.auth.service.ITokenService;
+import top.tolan.auth.service.base.BaseAuthServer;
 import top.tolan.auth.token.WechatAuthorizationToken;
 import top.tolan.common.constant.HttpStatus;
 import top.tolan.common.domain.AjaxResult;
@@ -25,13 +28,11 @@ import top.tolan.common.domain.AjaxResult;
  * @author tooooolan
  * @version 2024年5月30日
  */
-@Service
-public class WechatLoginServiceImpl implements IAuthServer {
+@Service(LoginMethods.WECHAT)
+public class WechatLoginServiceImpl extends BaseAuthServer {
 
     @Resource
     private AuthenticationManager authenticationManager;
-    @Resource
-    private ITokenService tokenService;
 
     /**
      * 用户名密码登录验证
@@ -61,11 +62,10 @@ public class WechatLoginServiceImpl implements IAuthServer {
             }
             // 登录成功后获取构建好的用户信息
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-            String token = tokenService.createToken(loginUser);
+            String token = super.tokenService.createToken(loginUser);
             return AjaxResult.success("登录成功", token);
         }
         return AjaxResult.error("登录失败");
     }
-
 
 }

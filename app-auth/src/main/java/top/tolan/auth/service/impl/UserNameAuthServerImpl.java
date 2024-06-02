@@ -5,7 +5,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import top.tolan.auth.constant.LoginMethods;
 import top.tolan.auth.context.AuthenticationContextHolder;
 import top.tolan.auth.dto.LoginParentDTO;
 import top.tolan.auth.dto.UsernamePasswordLoginDTO;
@@ -13,8 +15,9 @@ import top.tolan.auth.entity.LoginUser;
 import top.tolan.auth.provider.UsernamePasswordAuthProv;
 import top.tolan.auth.service.IAuthServer;
 import top.tolan.auth.service.ITokenService;
-import top.tolan.common.domain.AjaxResult;
+import top.tolan.auth.service.base.BaseAuthServer;
 import top.tolan.common.constant.HttpStatus;
+import top.tolan.common.domain.AjaxResult;
 
 /**
  * 登录服务实现类（账号密码）
@@ -22,14 +25,11 @@ import top.tolan.common.constant.HttpStatus;
  * @author tooooolan
  * @version 2024年5月30日
  */
-@Service
-public class UserNameAuthServerImpl implements IAuthServer {
+@Service(LoginMethods.USERNAME)
+public class UserNameAuthServerImpl extends BaseAuthServer {
 
     @Resource
     private AuthenticationManager authenticationManager;
-    @Resource
-    private ITokenService tokenService;
-
 
     /**
      * 用户名密码登录验证
@@ -58,7 +58,7 @@ public class UserNameAuthServerImpl implements IAuthServer {
             }
             // 登录成功后获取构建好的用户信息
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-            String token = tokenService.createToken(loginUser);
+            String token = super.tokenService.createToken(loginUser);
             return AjaxResult.success("登录成功", token);
         }
         return AjaxResult.error("登录失败");

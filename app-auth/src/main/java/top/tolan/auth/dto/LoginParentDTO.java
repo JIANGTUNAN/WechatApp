@@ -10,7 +10,7 @@ import top.tolan.auth.constant.LoginMethods;
 
 /**
  * 登录表单参数接收
- * 使用{@link JsonTypeInfo}实现请求数据对象多态
+ * 利用{@link JsonTypeInfo}实现请求数据对象多态
  *
  * @author tooooolan
  * @version 2024年5月30日
