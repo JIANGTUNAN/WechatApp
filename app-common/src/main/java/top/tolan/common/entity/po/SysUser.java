@@ -11,6 +11,12 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * 系统用户信息
+ *
+ * @author tooooolan
+ * @version 2024年6月6日
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -109,6 +115,12 @@ public class SysUser implements Serializable {
      */
     @TableField(value = "password")
     private String password;
+
+    /**
+     * 人脸图片
+     */
+    @TableField(value = "face_img")
+    private String faceImg;
 
     /**
      * 构造函数

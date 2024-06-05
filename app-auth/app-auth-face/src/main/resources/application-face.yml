@@ -1,0 +1,4 @@
+face:
+  access-key-id: ${face.access-key-id}
+  access-key-secret: ${face.access-key-secret}
+  endpoint: ${face.endpoint}

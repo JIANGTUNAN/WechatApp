@@ -39,15 +39,10 @@
             <groupId>top.tolan.wechat</groupId>
             <artifactId>app-system</artifactId>
         </dependency>
-        <!-- 短信发生功能 -->
+        <!-- 各种登录和安全框架 -->
         <dependency>
             <groupId>top.tolan.wechat</groupId>
-            <artifactId>app-sms</artifactId>
-        </dependency>
-        <!-- 微信登录和安全框架 -->
-        <dependency>
-            <groupId>top.tolan.wechat</groupId>
-            <artifactId>app-auth</artifactId>
+            <artifactId>app-auth-api</artifactId>
         </dependency>
 
     </dependencies>

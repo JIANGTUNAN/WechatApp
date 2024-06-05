@@ -6,10 +6,13 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.stream.ObjectRecord;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.stream.StreamMessageListenerContainer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import top.tolan.common.config.compression.SnappyCompressorAdapter;
 import top.tolan.common.config.serialization.FastJson2JsonRedisSerializer;
 import top.tolan.common.config.serialization.KryoSerializerAdapter;
@@ -21,6 +24,60 @@ import java.time.Duration;
  */
 @Configuration
 public class RedisConfig {
+
+    /**
+     * 配置RedisTemplate
+     *
+     * @param connectionFactory factory
+     * @return RedisTemplate
+     */
+    @Bean
+    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<Object, Object> template = new RedisTemplate<>();
+        // 设置Redis连接工厂
+        template.setConnectionFactory(connectionFactory);
+        // 设置键的序列化器为StringRedisSerializer
+        template.setKeySerializer(new StringRedisSerializer());
+        // 设置值的序列化器为FastJson2JsonRedisSerializer
+        template.setValueSerializer(this.fastJson2JsonRedisSerializer());
+        // 设置哈希键的序列化器为StringRedisSerializer
+        template.setHashKeySerializer(new StringRedisSerializer());
+        // 设置哈希值的序列化器为FastJson2JsonRedisSerializer
+        template.setHashValueSerializer(this.fastJson2JsonRedisSerializer());
+        template.afterPropertiesSet(); // 初始化模板
+        return template;
+    }
+
+    /**
+     * 获取一个 StreamMessageListenerContainer
+     *
+     * @param executor      执行线程池
+     * @param redisTemplate template
+     * @return redisListenerContainer
+     */
+    @Bean
+    public StreamMessageListenerContainer<String, ObjectRecord<String, String>> redisListenerContainer(
+            ThreadPoolTaskExecutor executor,
+            RedisTemplate<Object, Object> redisTemplate
+    ) {
+        StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, ObjectRecord<String, String>> options =
+                StreamMessageListenerContainer.StreamMessageListenerContainerOptions
+                        .builder()
+                        // 拉取消息超时时间
+                        .pollTimeout(Duration.ofSeconds(5))
+                        // 批量抓取消息
+                        .batchSize(1)
+                        // 传递的数据类型
+                        .targetType(String.class)
+                        .executor(executor)
+                        .build();
+        RedisConnectionFactory connectionFactory = redisTemplate.getConnectionFactory();
+        assert connectionFactory != null;
+        StreamMessageListenerContainer<String, ObjectRecord<String, String>> container = StreamMessageListenerContainer
+                .create(connectionFactory, options);
+        container.start();
+        return container;
+    }
 
     @Bean
     public RedisCacheManager redisCacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
@@ -39,23 +96,6 @@ public class RedisConfig {
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(lettuceConnectionFactory)
                 // 设置缓存默认配置
                 .cacheDefaults(redisCacheConfiguration).build();
-    }
-
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<Object, Object> template = new RedisTemplate<>();
-        // 设置Redis连接工厂
-        template.setConnectionFactory(connectionFactory);
-        // 设置键的序列化器为StringRedisSerializer
-        template.setKeySerializer(new StringRedisSerializer());
-        // 设置值的序列化器为FastJson2JsonRedisSerializer
-        template.setValueSerializer(this.fastJson2JsonRedisSerializer());
-        // 设置哈希键的序列化器为StringRedisSerializer
-        template.setHashKeySerializer(new StringRedisSerializer());
-        // 设置哈希值的序列化器为FastJson2JsonRedisSerializer
-        template.setHashValueSerializer(this.fastJson2JsonRedisSerializer());
-        template.afterPropertiesSet(); // 初始化模板
-        return template;
     }
 
     @Bean
@@ -88,10 +128,19 @@ public class RedisConfig {
      * 限流脚本
      */
     private String limitScriptText() {
-        return "local key = KEYS[1]\n" + "local count = tonumber(ARGV[1])\n" + "local time = tonumber(ARGV[2])\n"
-                + "local current = redis.call('get', key);\n" + "if current and tonumber(current) > count then\n"
-                + "    return tonumber(current);\n" + "end\n" + "current = redis.call('incr', key)\n"
-                + "if tonumber(current) == 1 then\n" + "    redis.call('expire', key, time)\n" + "end\n"
-                + "return tonumber(current);";
+        return """
+                local key = KEYS[1]
+                local count = tonumber(ARGV[1])
+                local time = tonumber(ARGV[2])
+                local current = redis.call('get', key);
+                if current and tonumber(current) > count then
+                    return tonumber(current);
+                end
+                current = redis.call('incr', key)
+                if tonumber(current) == 1 then
+                    redis.call('expire', key, time)
+                end
+                return tonumber(current);
+                """;
     }
 }

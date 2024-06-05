@@ -5,41 +5,32 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>top.tolan.wechat</groupId>
-        <artifactId>WechatApp</artifactId>
+        <artifactId>app-auth</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>app-auth</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>app-auth-base</module>
-        <module>app-auth-username</module>
-        <module>app-auth-api</module>
-        <module>app-auth-wechat</module>
-        <module>app-auth-sms</module>
-    </modules>
+    <artifactId>app-auth-api</artifactId>
 
     <dependencies>
-        <!-- 安全框架依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <!-- Token生成与解析-->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>top.tolan.wechat</groupId>
-            <artifactId>app-common</artifactId>
+            <artifactId>app-auth-username</artifactId>
+            <version>${app.version}</version>
         </dependency>
         <dependency>
             <groupId>top.tolan.wechat</groupId>
-            <artifactId>app-system</artifactId>
+            <artifactId>app-auth-wechat</artifactId>
+            <version>${app.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>top.tolan.wechat</groupId>
+            <artifactId>app-auth-sms</artifactId>
+            <version>${app.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>top.tolan.wechat</groupId>
+            <artifactId>app-auth-face</artifactId>
+            <version>${app.version}</version>
         </dependency>
     </dependencies>
-
 </project>

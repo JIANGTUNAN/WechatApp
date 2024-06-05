@@ -1,0 +1,13 @@
+sms:
+  access-key-id: ${sms.access-key-id}
+  access-key-secret: ${sms.access-key-secret}
+  # Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
+  endpoint: ${sms.endpoint}
+  # signName: 图南
+  signName: ${sms.signName}
+  # 一天最大发送次数
+  dayMaxTimes: 20
+  # 发送频率限制(分钟)
+  sendFrequency: 2
+  # 验证码有效时间(分钟)
+  codeValidTime: 5

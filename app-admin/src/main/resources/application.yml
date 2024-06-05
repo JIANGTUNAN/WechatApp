@@ -27,7 +27,7 @@ app:
   # 映射路径
   mappingUrl: /profile
   # 文件上传路径
-  profile: D:/workProj/WechatApp/upload
+  profile: D:/WorkFromHome/_upload/WechatApp
 
 Wechat:
   AppID: ${wechat.app-id}
