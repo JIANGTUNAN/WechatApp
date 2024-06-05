@@ -47,11 +47,7 @@ public class WechatLoginServiceImpl extends BaseAuthService {
                 AuthenticationContextHolder.setContext(wechatAuthorizationToken);
                 authentication = authenticationManager.authenticate(wechatAuthorizationToken);
             } catch (Exception e) {
-                if (e instanceof BadCredentialsException) {
-                    return AjaxResult.error(HttpStatus.UNAUTHORIZED, "用户名或密码错误");
-                } else {
-                    return AjaxResult.error(e.getMessage());
-                }
+                return AjaxResult.error(e.getMessage());
             } finally {
                 AuthenticationContextHolder.clearContext();
             }

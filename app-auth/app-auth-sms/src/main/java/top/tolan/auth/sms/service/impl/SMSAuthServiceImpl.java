@@ -11,6 +11,7 @@ import top.tolan.auth.base.dto.LoginParentDTO;
 import top.tolan.auth.base.dto.polymorphism.PhoneLoginDTO;
 import top.tolan.auth.base.entity.LoginUser;
 import top.tolan.auth.base.service.base.BaseAuthService;
+import top.tolan.auth.sms.provider.SMSAuthProv;
 import top.tolan.auth.sms.token.SMSAuthorizationToken;
 import top.tolan.common.constant.HttpStatus;
 import top.tolan.common.domain.AjaxResult;
@@ -27,6 +28,13 @@ public class SMSAuthServiceImpl extends BaseAuthService {
     @Resource
     private AuthenticationManager authenticationManager;
 
+    /**
+     * 手机信息验证码登录验证
+     * 提供者{@link SMSAuthProv#authenticate(Authentication)}
+     *
+     * @param t 登录信息接收
+     * @return 验证失败信息或成功身份令牌
+     */
     @Override
     public <T extends LoginParentDTO> AjaxResult login(T t) {
         if (t instanceof PhoneLoginDTO phoneLoginDTO) {
@@ -37,11 +45,7 @@ public class SMSAuthServiceImpl extends BaseAuthService {
                 AuthenticationContextHolder.setContext(authorizationToken);
                 authentication = authenticationManager.authenticate(authorizationToken);
             } catch (Exception e) {
-                if (e instanceof BadCredentialsException) {
-                    return AjaxResult.error(HttpStatus.UNAUTHORIZED, "用户名或密码错误");
-                } else {
-                    return AjaxResult.error(e.getMessage());
-                }
+                return AjaxResult.error(e.getMessage());
             } finally {
                 AuthenticationContextHolder.clearContext();
             }
