@@ -11,7 +11,7 @@ import top.tolan.auth.base.context.AuthenticationContextHolder;
 import top.tolan.auth.base.dto.LoginParentDTO;
 import top.tolan.auth.base.dto.polymorphism.WechatLoginDTO;
 import top.tolan.auth.base.entity.LoginUser;
-import top.tolan.auth.base.service.base.BaseAuthServer;
+import top.tolan.auth.base.service.base.BaseAuthService;
 import top.tolan.auth.wechat.provider.WechatCodeAuthProv;
 import top.tolan.auth.wechat.token.WechatAuthorizationToken;
 import top.tolan.common.constant.HttpStatus;
@@ -24,7 +24,7 @@ import top.tolan.common.domain.AjaxResult;
  * @version 2024年5月30日
  */
 @Service(LoginMethods.WECHAT)
-public class WechatLoginServiceImpl extends BaseAuthServer {
+public class WechatLoginServiceImpl extends BaseAuthService {
 
     @Resource
     private AuthenticationManager authenticationManager;

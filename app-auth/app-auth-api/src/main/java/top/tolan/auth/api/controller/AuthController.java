@@ -9,7 +9,7 @@ import top.tolan.auth.base.dto.FaceVerificationDTO;
 import top.tolan.auth.base.dto.LoginParentDTO;
 import top.tolan.auth.base.entity.LoginUser;
 import top.tolan.auth.base.service.AuthServerFactory;
-import top.tolan.auth.base.service.IAuthServer;
+import top.tolan.auth.base.service.IAuthService;
 import top.tolan.auth.base.service.ITokenService;
 import top.tolan.auth.face.service.FaceVerificationService;
 import top.tolan.common.domain.AjaxResult;
@@ -34,7 +34,7 @@ public class AuthController {
      */
     @PostMapping("/login")
     public AjaxResult login(@RequestBody @Validated LoginParentDTO loginParentDTO) {
-        IAuthServer authServer = AuthServerFactory.getAuthServer(loginParentDTO.getLoginMethod());
+        IAuthService authServer = AuthServerFactory.getAuthServer(loginParentDTO.getLoginMethod());
         return authServer.login(loginParentDTO);
     }
 
@@ -44,7 +44,7 @@ public class AuthController {
     @GetMapping("/logout")
     public AjaxResult outLogin(HttpServletRequest request) {
         LoginUser loginUser = tokenService.getLoginUser(request);
-        IAuthServer authServer = AuthServerFactory.getAuthServer(loginUser.getLoginMethod());
+        IAuthService authServer = AuthServerFactory.getAuthServer(loginUser.getLoginMethod());
         return authServer.logout(loginUser);
     }
 

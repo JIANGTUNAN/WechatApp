@@ -11,7 +11,7 @@ import top.tolan.common.domain.AjaxResult;
  * @author tooooolan
  * @version 2024年5月30日
  */
-public interface IAuthServer {
+public interface IAuthService {
 
     /**
      * 登录

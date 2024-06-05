@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import top.tolan.auth.base.constant.LoginMethods;
-import top.tolan.auth.base.service.base.BaseAuthServer;
+import top.tolan.auth.base.service.base.BaseAuthService;
 
 import java.util.Map;
 
@@ -18,9 +18,9 @@ import java.util.Map;
 public class AuthServerFactory {
 
     @Resource
-    private Map<String, BaseAuthServer> loginServiceMap;
+    private Map<String, BaseAuthService> loginServiceMap;
 
-    private static Map<String, BaseAuthServer> staticLoginServiceMap;
+    private static Map<String, BaseAuthService> staticLoginServiceMap;
 
     /**
      * 初始化静态登录服务
@@ -33,7 +33,7 @@ public class AuthServerFactory {
     /**
      * 获取登录服务
      */
-    public static IAuthServer getAuthServer(String loginMethod) {
+    public static IAuthService getAuthServer(String loginMethod) {
         return switch (loginMethod) {
             case LoginMethods.PHONE -> staticLoginServiceMap.get(LoginMethods.PHONE);
             case LoginMethods.EMAIL -> staticLoginServiceMap.get(LoginMethods.EMAIL);

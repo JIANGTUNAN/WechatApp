@@ -5,7 +5,7 @@ import lombok.NonNull;
 import org.springframework.stereotype.Component;
 import top.tolan.auth.base.dto.LoginParentDTO;
 import top.tolan.auth.base.entity.LoginUser;
-import top.tolan.auth.base.service.IAuthServer;
+import top.tolan.auth.base.service.IAuthService;
 import top.tolan.auth.base.service.ITokenService;
 import top.tolan.common.domain.AjaxResult;
 
@@ -16,7 +16,7 @@ import top.tolan.common.domain.AjaxResult;
  * @version 2024年6月3日
  */
 @Component
-public abstract class BaseAuthServer implements IAuthServer {
+public abstract class BaseAuthService implements IAuthService {
 
     @Resource
     protected ITokenService tokenService;
