@@ -81,6 +81,9 @@
 	<logger name="top.tolan" level="debug" />
 	<!-- Spring日志级别控制  -->
 	<logger name="org.springframework" level="warn" />
+    <!-- Flink CDC 日志级别控制  -->
+	<logger name="org.apache.flink.runtime" level="warn" />
+	<logger name="com.ververica.cdc.connectors" level="warn" />
 
 	<root level="info">
 		<appender-ref ref="console" />
